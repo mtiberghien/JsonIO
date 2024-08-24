@@ -138,7 +138,7 @@ void TestJObject()
     JArray a2{ 10, "20", o["item"], nullptr };
     for (int i = 1; i < 4; i++)
     {
-        a.push_back(JObject{ R"({"id":)" + std::to_string(i) + "}" });
+        a << JObject{ {"id", i} };
     }
     o["ids"] = a;
     o["values"] = a2;
@@ -245,11 +245,17 @@ int main()
     o["n"] = nullptr;
 
     JArray aTest{ 1, "2", JObject{R"({"item": 3})"} };
-    aTest << nullptr;
-    aTest << JArray{ 1,2,3 };
+    aTest << nullptr << JArray{ 1,2,3 };
     TestValue(aTest);
     aTest[3] = 4;
     TestValue(aTest);
+    JObject oTest{ {"id", 1}, {"deux" , 2.0}, {"n", nullptr}, {"a", JArray{1,2,3}}, {"d", E_JsonType::Double} };
+    TestValue(oTest);
+    std::map<std::string, JsonValue> list{ {"id", 1}, {"2", "deux"} };
+    for (std::pair<const std::string&, const JsonValue&> p : list)
+    {
+        std::cout << p.first << ": " << p.second.getString() << std::endl;
+    }
 
     std::getchar();
 }

@@ -129,7 +129,7 @@ int main()
     JArray a2{ 10, "20", o["item"], nullptr };
     for (int i = 1; i < 4; i++)
     {
-        a.push_back(JObject{ R"({"id":)" + std::to_string(i) + "}" });
+        a << JObject{ {"id", i} };
     }
     o["ids"] = a;
     o["values"] = a2;

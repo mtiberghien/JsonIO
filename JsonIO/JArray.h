@@ -38,7 +38,7 @@ namespace json
 		virtual bool read(const std::string& json);
 		virtual void push_back(JsonValue&& item) { m_items.push_back(item); }
 		virtual void push_back(const JsonValue& item) { m_items.push_back(item); }
-		virtual void operator<<(const JsonValue& item) { m_items.push_back(item); }
+		virtual JArray& operator<<(const JsonValue& item) { m_items.push_back(item); return *this; }
 		void clear() { m_items.clear(); }
 		std::size_t size() const { return m_items.size(); }
 	private:
@@ -52,7 +52,7 @@ namespace json
 		bool read(const std::string& json) override { return false; }
 		void push_back(JsonValue&& item) override {}
 		void push_back(const JsonValue& item) override {}
-		void operator<<(const JsonValue& item) override {}
+		JArray& operator<<(const JsonValue& item) override { return *this; }
 	};
 
 	class JSONIO_API JArrayProvider

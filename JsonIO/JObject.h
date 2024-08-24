@@ -10,6 +10,7 @@ namespace json
 	{
 	public:
 		JObject() {}
+		JObject(std::initializer_list < std::pair<const std::string, JsonValue>> properties);
 		JObject(const JObject& copy)
 		{
 			read(copy.getString());

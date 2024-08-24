@@ -59,6 +59,12 @@ namespace json
 		case E_JsonType::Array:
 			m_ptr = std::make_shared<JArray>();
 			break;
+		case E_JsonType::Null:
+		{
+			nullptr_t v = nullptr;
+			m_ptr = std::make_shared<JPrimitive<std::nullptr_t>>(v);
+			break;
+		}
 		default:
 			m_ptr = std::make_shared<JVoidError>();
 			break;

@@ -5,6 +5,10 @@
 
 namespace json
 {
+	JObject::JObject(std::initializer_list < std::pair<const std::string, JsonValue>> properties): m_properties(properties)
+	{
+	}
+
 	JsonValue& JObject::operator[](const std::string& key) {
 		if (!exists(key))
 		{
