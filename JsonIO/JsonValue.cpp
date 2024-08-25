@@ -65,6 +65,11 @@ namespace json
 			m_ptr = std::make_shared<JPrimitive<std::nullptr_t>>(v);
 			break;
 		}
+		case E_JsonType::Undefined:
+		{
+			m_ptr = std::make_shared<JVoid>();
+			break;
+		}
 		default:
 			m_ptr = std::make_shared<JVoidError>();
 			break;

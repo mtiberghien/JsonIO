@@ -41,6 +41,7 @@ namespace json
 		virtual bool read(const std::string& json);
 		JsonValue& find(const std::string& path);
 		bool exists(const std::string& key) const;
+		size_t size() const { return (int)m_properties.size(); }
 	private:
 		std::map<std::string, JsonValue> m_properties;
 	};

@@ -207,5 +207,18 @@ namespace JsonIOtests
 			Assert::IsTrue(v.getType() == E_JsonType::Short);
 			Assert::AreEqual(2, v.getInt());
 		}
+
+		TEST_METHOD(JObjectInit)
+		{
+			JObject o{ {"a",1},{"b", false}, {"c", JArray{1,"2", nullptr}} };
+			Assert::AreEqual(3, (int)o.size());
+			Assert::AreEqual(1, (int)o["a"]);
+			Assert::IsFalse((bool)o["b"]);
+			Assert::AreEqual(3, (int)((JArray&)o["c"]).size());
+			JObject o2{ o };
+			Assert::IsTrue(o == o2);
+			JsonValue v = o;
+			Assert::IsTrue(v == o);
+		}
 	};
 }

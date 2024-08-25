@@ -39,9 +39,9 @@ namespace json
 		explicit operator int() const { return getInt(); }
 		explicit operator float() const { return getFloat(); }
 		explicit operator double() const { return getDouble(); }
-		explicit operator std::string() const { return getString(); }
-		explicit operator JObject&() { return getObject(); }
-		explicit operator JArray& () { return getArray(); }
+		operator std::string() const { return getString(); }
+	    operator JObject&() { return getObject(); }
+		operator JArray& () { return getArray(); }
 		explicit operator const JObject& () const { return getObject(); }
 		explicit operator const JArray& () const { return getArray(); }
 		bool operator==(const JsonValue& other)

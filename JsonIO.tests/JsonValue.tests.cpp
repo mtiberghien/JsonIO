@@ -11,7 +11,18 @@ namespace JsonIOtests
 {
 	TEST_CLASS(JsonValuetests)
 	{
-		TEST_METHOD(TestEquality)
+		TEST_METHOD(TypeInitialization)
+		{
+			JsonValue v;
+			E_JsonType types[] = { E_JsonType::Array, E_JsonType::Bool, E_JsonType::Short, E_JsonType::Int, E_JsonType::Float, E_JsonType::Double, E_JsonType::String, E_JsonType::Null, E_JsonType::Object, E_JsonType::Undefined , E_JsonType::Error};
+			for (E_JsonType t : types)
+			{
+				v = JsonValue{ t };
+				Assert::IsTrue(v.getType() == t);
+			}
+		}
+
+		TEST_METHOD(TestIntEquality)
 		{
 			JsonValue v = 1;
 			JsonValue v2 = 1;
