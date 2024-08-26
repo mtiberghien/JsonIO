@@ -148,6 +148,7 @@
     <ClInclude Include="JPrimitive.h" />
     <ClInclude Include="Json.h" />
     <ClInclude Include="JsonIO.h" />
+    <ClInclude Include="JsonItem.h" />
     <ClInclude Include="JsonValue.h" />
     <ClInclude Include="JVoid.h" />
     <ClInclude Include="pch.h" />
@@ -157,6 +158,7 @@
     <ClCompile Include="JArray.cpp" />
     <ClCompile Include="JObject.cpp" />
     <ClCompile Include="JPrimitive.cpp" />
+    <ClCompile Include="JsonItem.cpp" />
     <ClCompile Include="JsonValue.cpp" />
     <ClCompile Include="JVoid.cpp" />
     <ClCompile Include="pch.cpp">

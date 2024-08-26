@@ -1,22 +1,18 @@
 #pragma once
-#include "IJsonValue.h"
+#include "JsonItem.h"
 #include "JsonIO.h"
 
 namespace json
 {
 	class JsonValue;
 
-	class JSONIO_API JObject : public IJsonValue
+	class JSONIO_API JObject : public JsonItem
 	{
 	public:
 		JObject() {}
 		JObject(std::initializer_list < std::pair<const std::string, JsonValue>> properties);
-		JObject(const JObject& copy)
-		{
-			read(copy.getString());
-		}
 		JObject(const std::string& json) { read(json); }
-		~JObject() { m_properties.clear(); }
+		virtual ~JObject() { m_properties.clear(); }
 		bool isEmpty() const { return m_properties.empty(); }
 		E_JsonType getType() const override { return E_JsonType::Object; }
 		bool getBool(bool defaultValue = false) const override { return !isEmpty(); }
@@ -42,6 +38,7 @@ namespace json
 		JsonValue& find(const std::string& path);
 		bool exists(const std::string& key) const;
 		size_t size() const { return (int)m_properties.size(); }
+		virtual JObject& operator=(const JObject& object);
 	private:
 		std::map<std::string, JsonValue> m_properties;
 	};
@@ -49,11 +46,14 @@ namespace json
 	class JSONIO_API JObjectError : public JObject
 	{
 	public:
+		JObjectError() {}
+		JObjectError(const JObject&& object) {}
 		E_JsonType getType() const override { return E_JsonType::Error; }
 		JsonValue& operator[](const std::string& key) override;
 		JsonValue& operator[](int index) override;
 		bool read(std::istream& stream) override;
 		bool read(const std::string& json) override;
+		JObject& operator=(const JObject& object) override { return *this; }
 	};
 
 	class JSONIO_API JObjectProvider

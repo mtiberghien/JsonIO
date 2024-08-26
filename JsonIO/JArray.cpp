@@ -45,6 +45,12 @@ namespace json
 		return JVoidProvider::getError();
 	}
 
+	JArray& JArray::operator=(const JArray& array)
+	{
+		read(array.getString());
+		return *this;
+	}
+
 	void JArray::write(std::ostream& stream, bool indent, int& indentLevel) const
 	{
 		if (!isEmpty())

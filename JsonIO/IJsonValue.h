@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "JsonIO.h"
 
 namespace json
 {
@@ -10,7 +11,7 @@ namespace json
 	class JObject;
 	class JArray;
 
-	class IJsonValue
+	class JSONIO_API IJsonValue
 	{
 	public:
 		IJsonValue() {}
@@ -31,7 +32,6 @@ namespace json
 		virtual const JsonValue& operator[](const std::string& key) const = 0;
 		virtual const JsonValue& operator[](int index) const = 0;
 		virtual void write(std::ostream& stream, bool indent, int& indentLevel) const = 0;
-		bool operator==(const IJsonValue& other) { return this->getString() == other.getString(); };
 
 	};
 }

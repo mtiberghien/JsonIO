@@ -51,6 +51,9 @@
     <ClInclude Include="Json.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JsonItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -72,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JVoid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

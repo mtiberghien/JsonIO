@@ -9,6 +9,12 @@ namespace json
 	{
 	}
 
+	JObject& JObject::operator=(const JObject& object)
+	{
+		read(object.getString());
+		return *this;
+	}
+
 	JsonValue& JObject::operator[](const std::string& key) {
 		if (!exists(key))
 		{

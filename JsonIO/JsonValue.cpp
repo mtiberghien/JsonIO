@@ -7,9 +7,13 @@
 
 namespace json
 {
-	JsonValue::JsonValue(const JObject& ref) :m_ptr(new JObject(ref)) {}
+	JsonValue::JsonValue(const JObject& ref) : m_ptr(new JObject(ref))
+	{
+	}
 	JsonValue::JsonValue() :m_ptr(new JVoid()) {}
-	JsonValue::JsonValue(const JArray& ref) :m_ptr((IJsonValue*)new JArray(ref)) {}
+	JsonValue::JsonValue(const JArray& ref) : m_ptr(new JArray(ref))
+	{
+	}
 
 	JsonValue::JsonValue(E_JsonType a_Type)
 	{

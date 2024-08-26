@@ -1,5 +1,5 @@
 #pragma once
-#include "IJsonValue.h"
+#include "JsonItem.h"
 #include "JVoid.h"
 #include "ioHelper.h"
 #include "JsonIO.h"
@@ -15,7 +15,7 @@ namespace json
 
 
 	template<class T>
-	class JPrimitive : public IJsonValue
+	class JPrimitive : public JsonItem
 	{
 	public:
 		JPrimitive(T value) : m_value(value)
@@ -30,8 +30,14 @@ namespace json
 		{
 			return getBool<T>(defaultValue);
 		}
-		short getShort(short defaultValue = 0) const override { return (short)getInt(defaultValue); }
-		int getInt(int defaultValue = 0) const override { return getInt<T>(defaultValue); }
+		short getShort(short defaultValue = 0) const override 
+		{ 
+			return getShort<T>(defaultValue);
+		}
+		int getInt(int defaultValue = 0) const override 
+		{ 
+			return getInt<T>(defaultValue); 
+		}
 		float getFloat(float defaultValue = 0) const override
 		{
 			return getFloat<T>(defaultValue);
@@ -83,10 +89,10 @@ namespace json
 			switch (sizeof(T))
 			{
 				case sizeof(bool) : return E_JsonType::Bool;
-					case sizeof(short) : return E_JsonType::Short;
-						case sizeof(int) : return E_JsonType::Int;
-							case sizeof(double) : return E_JsonType::Double;
-							default: return E_JsonType::Error;
+				case sizeof(short) : return E_JsonType::Short;
+				case sizeof(int) : return E_JsonType::Int;
+				case sizeof(double) : return E_JsonType::Double;
+				default: return E_JsonType::Undefined;
 			}
 		}
 		template<>
@@ -125,6 +131,12 @@ namespace json
 		template<class T>
 		float getFloat(float defaultValue) const
 		{
+			return (float)m_value;
+
+		}
+		template<>
+		float getFloat<const char*>(float defaultValue) const
+		{
 			double d;
 			E_JsonType t;
 			if (tryGetNumber(getString(), d, t))
@@ -132,15 +144,25 @@ namespace json
 				return (float)d;
 			}
 			return defaultValue;
-
 		}
 		template<>
-		float getFloat<bool>(float defaultValue) const
+		float getFloat<std::string>(float defaultValue) const
 		{
-			return (float)getBool();
+			return getFloat<const char*>(defaultValue);
 		}
+		template<>
+		float getFloat<std::nullptr_t>(float defaultValue) const
+		{
+			return getFloat<const char*>(defaultValue);
+		}
+		
 		template<class T>
 		double getDouble(double defaultValue) const
+		{
+			return (double)m_value;
+		}
+		template<>
+		double getDouble<const char*>(double defaultValue) const
 		{
 			double d;
 			E_JsonType t;
@@ -149,15 +171,24 @@ namespace json
 				return d;
 			}
 			return defaultValue;
-
 		}
 		template<>
-		double getDouble<bool>(double defaultValue) const
+		double getDouble<std::string>(double defaultValue) const
 		{
-			return (double)getBool();
+			return getDouble<const char*>(defaultValue);
+		}
+		template<>
+		double getDouble<std::nullptr_t>(double defaultValue) const
+		{
+			return getDouble<const char*>(defaultValue);
 		}
 		template<class T>
 		int getInt(int defaultValue) const
+		{
+			return (int)m_value;
+		}
+		template<>
+		int getInt<const char*>(int defaultValue) const
 		{
 			double d;
 			E_JsonType t;
@@ -168,9 +199,40 @@ namespace json
 			return defaultValue;
 		}
 		template<>
-		int getInt<bool>(int defaultValue) const
+		int getInt<std::string>(int defaultValue) const
 		{
-			return (int)getBool();
+			return getInt<const char*>(defaultValue);
+		}
+		template<>
+		int getInt<std::nullptr_t>(int defaultValue) const
+		{
+			return getInt<const char*>(defaultValue);
+		}
+		template<class T>
+		short getShort(short defaultValue) const
+		{
+			return (short)m_value;
+		}
+		template<>
+		short getShort<const char*>(short defaultValue) const
+		{
+			double d;
+			E_JsonType t;
+			if (tryGetNumber(getString(), d, t))
+			{
+				return (short)d;
+			}
+			return defaultValue;
+		}
+		template<>
+		short getShort<std::string>(short defaultValue) const
+		{
+			return getShort<const char*>(defaultValue);
+		}
+		template<>
+		short getShort<std::nullptr_t>(short defaultValue) const
+		{
+			return getShort<const char*>(defaultValue);
 		}
 		template<class T>
 		bool getBool(bool defaultValue) const
@@ -178,14 +240,14 @@ namespace json
 			return (bool)m_value;
 		}
 		template<>
-		bool getBool<std::string>(bool defaultValue) const
+		bool getBool<const char*>(bool defaultValue) const
 		{
 			return !getString().empty();
 		}
 		template<>
-		bool getBool<const char*>(bool defaultValue) const
+		bool getBool<std::string>(bool defaultValue) const
 		{
-			return getBool<std::string>(defaultValue);
+			return getBool<const char*>(defaultValue);
 		}
 		template<class T>
 		void write(std::ostream& stream, bool indent, int& indentLevel) const
@@ -193,7 +255,7 @@ namespace json
 			stream << getString<T>();
 		}
 		template<>
-		void write<std::string>(std::ostream& stream, bool indent, int& indentLevel) const
+		void write<const char*>(std::ostream& stream, bool indent, int& indentLevel) const
 		{
 			stream << '"';
 			for (char c : getString<std::string>())
@@ -210,9 +272,9 @@ namespace json
 			stream << '"';
 		}
 		template<>
-		void write<const char*>(std::ostream& stream, bool indent, int& indentLevel) const
+		void write<std::string>(std::ostream& stream, bool indent, int& indentLevel) const
 		{
-			write<std::string>(stream, indent, indentLevel);
+			write<const char*>(stream, indent, indentLevel);
 		}
 		T m_value;
 	};

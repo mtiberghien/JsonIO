@@ -1,5 +1,5 @@
 #pragma once
-#include "IJsonValue.h"
+#include "JsonItem.h"
 #include "JsonIO.h"
 
 
@@ -7,16 +7,12 @@ namespace json
 {
 	class JsonValue;
 
-	class JSONIO_API JArray : public IJsonValue
+	class JSONIO_API JArray : public JsonItem
 	{
 	public:
 		JArray();
-		JArray(const JArray& copy)
-		{
-			read(copy.getString());
-		}
 		JArray(std::initializer_list<JsonValue> items) : m_items(items) {}
-		~JArray() { m_items.clear(); }
+		virtual ~JArray() { m_items.clear(); }
 		bool isEmpty() const { return m_items.empty(); }
 		E_JsonType getType() const override { return E_JsonType::Array; }
 		bool getBool(bool defaultValue = false) const override { return !isEmpty(); }
@@ -41,6 +37,7 @@ namespace json
 		virtual JArray& operator<<(const JsonValue& item) { m_items.push_back(item); return *this; }
 		void clear() { m_items.clear(); }
 		std::size_t size() const { return m_items.size(); }
+		virtual JArray& operator=(const JArray& array);
 	private:
 		std::vector<JsonValue> m_items;
 	};
@@ -53,6 +50,7 @@ namespace json
 		void push_back(JsonValue&& item) override {}
 		void push_back(const JsonValue& item) override {}
 		JArray& operator<<(const JsonValue& item) override { return *this; }
+		JArray& operator=(const JArray& array) override { return *this; }
 	};
 
 	class JSONIO_API JArrayProvider

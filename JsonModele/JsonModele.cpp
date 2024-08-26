@@ -91,6 +91,7 @@ std::string to_string(E_JsonType type)
     case E_JsonType::Double: return "Double";
     case E_JsonType::String: return "String";
     case E_JsonType::Undefined: return "Void";
+    case E_JsonType::Null: return "Null";
     case E_JsonType::Error: return "Error";
     default:return "Unkwown";
         break;
@@ -157,7 +158,7 @@ void TestJObject()
 
 int main()
 {
-    E_JsonType types[] = { E_JsonType::Bool, E_JsonType::Short, E_JsonType::Int, E_JsonType::Float, E_JsonType::Double, E_JsonType::String };
+   E_JsonType types[] = { E_JsonType::Bool, E_JsonType::Short, E_JsonType::Int, E_JsonType::Float, E_JsonType::Double, E_JsonType::String };
     JObject o;
     JObject so;
     JArray ta;
@@ -172,6 +173,7 @@ int main()
     o["st"] = "Hello";
     o["o"] = so;
     o["t"] = ta;
+    o["n"] = nullptr;
     for (auto t : types)
     {
         std::cout << "\tGet" << t << std::endl;
@@ -188,6 +190,7 @@ int main()
         TestValue("", t);
         TestValue(o, t);
         TestValue(ta, t);
+        TestValue(nullptr, t);
     }
 
     JsonValue v(1);
@@ -256,6 +259,18 @@ int main()
     {
         std::cout << p.first << ": " << p.second.getString() << std::endl;
     }
+
+    JObject& oError = JObjectProvider::getObjectError();
+    TestValue(oError);
+    oError = JObject{ {"test", "c'est un test"} };
+    TestValue(oError);
+    TestValue(JObjectProvider::getObjectError());
+
+    JArray& aError = JArrayProvider::getArrayError();
+    TestValue(aError);
+    aError = JArray{ 1,2,3 };
+    TestValue(aError);
+    TestValue(JArrayProvider::getArrayError());
 
     std::getchar();
 }
