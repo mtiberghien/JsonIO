@@ -29,5 +29,21 @@ namespace JsonIOtests
 			Assert::AreEqual(1, (int)v);
 			Assert::IsTrue(v == v2);
 		}
+
+		TEST_METHOD(TestBoolEquality)
+		{
+			JsonValue v = true;
+			JsonValue v2 = true;
+			Assert::AreEqual(true, (bool)v);
+			Assert::IsTrue(v == v2);
+		}
+
+		TEST_METHOD(TestJObjectEquality)
+		{
+			JsonValue v = JObject{ { "id", 1 }, { "value","test" } };
+			JsonValue v2 = JObject{ { "id", 1 }, { "value","test" } };
+			Assert::IsTrue(v == JObject{R"({"id": 1, "value": "test"})"});
+			Assert::IsTrue(v == v2);
+		}
 	};
 }
