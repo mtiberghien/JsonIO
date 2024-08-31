@@ -6,7 +6,7 @@
 namespace json
 {
 	class JObject;
-	class JVoid;
+	class JUndefined;
 	class JArray;
 
 	class JSONIO_API JsonValue : public JsonItem
@@ -35,7 +35,6 @@ namespace json
 		JsonValue& operator[](const std::string& key) override { return m_ptr->operator[](key); }
 		JsonValue& operator[](int index) override { return m_ptr->operator[](index); }
 		void write(std::ostream& stream, bool indent, int& indentLevel) const override { m_ptr->write(stream, indent, indentLevel); }
-		static bool read(std::istream&, JsonValue& value, bool& hasNext);
 		JsonValue& operator=(const JsonValue& value)
 		{
 			if (getType() != E_JsonType::Error)

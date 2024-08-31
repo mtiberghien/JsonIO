@@ -1,19 +1,20 @@
 #pragma once
 #include "JsonItem.h"
 #include "JsonIO.h"
+#include "IJsonContainer.h"
 
 
 namespace json
 {
 	class JsonValue;
 
-	class JSONIO_API JArray : public JsonItem
+	class JSONIO_API JArray : public JsonItem, public IJsonContainer
 	{
 	public:
 		JArray();
 		JArray(std::initializer_list<JsonValue> items) : m_items(items) {}
 		virtual ~JArray() { m_items.clear(); }
-		bool isEmpty() const { return m_items.empty(); }
+		bool isEmpty() const override{ return m_items.empty(); }
 		E_JsonType getType() const override { return E_JsonType::Array; }
 		bool getBool(bool defaultValue = false) const override { return !isEmpty(); }
 		short getShort(short defaultValue = 0) const override { return (short)m_items.size(); }
@@ -35,14 +36,14 @@ namespace json
 		virtual void push_back(JsonValue&& item) { m_items.push_back(item); }
 		virtual void push_back(const JsonValue& item) { m_items.push_back(item); }
 		virtual JArray& operator<<(const JsonValue& item) { m_items.push_back(item); return *this; }
-		void clear() { m_items.clear(); }
-		std::size_t size() const { return m_items.size(); }
+		void clear() override { m_items.clear(); }
+		std::size_t size() const override { return m_items.size(); }
 		virtual JArray& operator=(const JArray& array);
 	private:
 		std::vector<JsonValue> m_items;
 	};
 
-	class JSONIO_API JArrayError : public JArray
+	class JArrayError : public JArray
 	{
 		E_JsonType getType() const override { return E_JsonType::Error; }
 		bool read(std::istream& stream) override { return false; }

@@ -1,19 +1,21 @@
 #pragma once
 #include "JsonItem.h"
 #include "JsonIO.h"
+#include <vector>
+#include "IJsonContainer.h"
 
 namespace json
 {
 	class JsonValue;
 
-	class JSONIO_API JObject : public JsonItem
+	class JSONIO_API JObject : public JsonItem, public IJsonContainer
 	{
 	public:
 		JObject() {}
 		JObject(std::initializer_list < std::pair<const std::string, JsonValue>> properties);
 		JObject(const std::string& json) { read(json); }
 		virtual ~JObject() { m_properties.clear(); }
-		bool isEmpty() const { return m_properties.empty(); }
+		bool isEmpty() const override { return m_properties.empty(); }
 		E_JsonType getType() const override { return E_JsonType::Object; }
 		bool getBool(bool defaultValue = false) const override { return !isEmpty(); }
 		short getShort(short defaultValue = 0) const override { return (short)m_properties.size(); }
@@ -31,19 +33,19 @@ namespace json
 		virtual JsonValue& operator[](int index) override;
 		void write(std::ostream& stream, bool indent, int& indentLevel) const override;
 		std::vector<std::string> getKeys() const;
-		void clear() { m_properties.clear(); }
+		void clear() override { m_properties.clear(); }
 		void write(std::ostream& stream, bool indent = false) { int indentLevel = 0; write(stream, indent, indentLevel); }
 		virtual bool read(std::istream& stream);
 		virtual bool read(const std::string& json);
 		JsonValue& find(const std::string& path);
 		bool exists(const std::string& key) const;
-		size_t size() const { return (int)m_properties.size(); }
+		size_t size() const override { return (int)m_properties.size(); }
 		virtual JObject& operator=(const JObject& object);
 	private:
 		std::map<std::string, JsonValue> m_properties;
 	};
 
-	class JSONIO_API JObjectError : public JObject
+	class JObjectError : public JObject
 	{
 	public:
 		JObjectError() {}

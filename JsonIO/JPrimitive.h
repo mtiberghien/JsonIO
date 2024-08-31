@@ -1,15 +1,17 @@
 #pragma once
 #include "JsonItem.h"
-#include "JVoid.h"
-#include "ioHelper.h"
+#include "JUndefined.h"
+#include "JsonIOHelper.h"
 #include "JsonIO.h"
 #include "JObject.h"
 #include "JArray.h"
 #include <limits>
+#include <iomanip>
+#include <sstream>
 
 namespace json
 {
-	class JVoid;
+	class JUndefined;
 	class JsonValue;
 
 	const std::map<char, std::string> g_escapes = { {'\r', "\\r"}, {'\n', "\\n"},{'\t', "\\t"},{'\f',"\\f"},{'\v', "\\v"} };
@@ -167,7 +169,7 @@ namespace json
 		{
 			double d;
 			E_JsonType t;
-			if (tryGetNumber(getString(), d, t))
+			if (tryGetNumber(this->getString(), d, t))
 			{
 				return d;
 			}

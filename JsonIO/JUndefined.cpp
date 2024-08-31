@@ -1,46 +1,46 @@
 #include "pch.h"
-#include "JVoid.h"
+#include "JUndefined.h"
 #include "JsonValue.h"
 #include "JObject.h"
 
 namespace json
 {
-	JsonValue& JVoid::operator[](const std::string& key)
+	JsonValue& JUndefined::operator[](const std::string& key)
 	{
 		return JVoidProvider::getError();
 	}
 
-	const JsonValue& JVoid::operator[](const std::string& key) const
+	const JsonValue& JUndefined::operator[](const std::string& key) const
 	{
 		return JVoidProvider::getError();
 	}
 
-	JsonValue& JVoid::operator[](int index)
+	JsonValue& JUndefined::operator[](int index)
 	{
 		return JVoidProvider::getError();
 	}
 
-	const JsonValue& JVoid::operator[](int index) const
+	const JsonValue& JUndefined::operator[](int index) const
 	{
 		return JVoidProvider::getError();
 	}
 
-	JObject& JVoid::getObject()
+	JObject& JUndefined::getObject()
 	{
 		return JObjectProvider::getObjectError();
 	}
 
-	JArray& JVoid::getArray()
+	JArray& JUndefined::getArray()
 	{
 		return JArrayProvider::getArrayError();
 	}
 
-	const JObject& JVoid::getObject() const
+	const JObject& JUndefined::getObject() const
 	{
 		return JObjectProvider::getObjectError();
 	}
 
-	const JArray& JVoid::getArray() const
+	const JArray& JUndefined::getArray() const
 	{
 		return JArrayProvider::getArrayError();
 	}

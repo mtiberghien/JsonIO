@@ -17,12 +17,12 @@ class Item : public IJsonSerializable
 public:
     Item() {}
     Item(const std::string& name, int id) : m_name(name), m_id(id) {}
-    void writeObject(JObject& object) override
+    void toObject(JObject& object) override
     {
         object["name"] = m_name;
         object["id"] = m_id;
     }
-    void readObject(const JObject& object) override
+    void fromObject(const JObject& object) override
     {
         m_name = object["name"].getString("default");
         m_id = object["id"].getInt(-1);
@@ -40,19 +40,19 @@ public:
     Items()
     {
     }
-    void writeObject(JObject& object) override
+    void toObject(JObject& object) override
     {
         JArray l_devices;
         for (auto& d : m_items)
         {
             JObject o;
-            d.writeObject(o);
+            d.toObject(o);
             l_devices.push_back(o);
         }
         object["devices"] = l_devices;
     }
 
-    void readObject(const JObject& object) override
+    void fromObject(const JObject& object) override
     {
         m_items.clear();
         const JArray& items = object["devices"].getArray();
@@ -60,7 +60,7 @@ public:
         {
             const JObject& o = items[i].getObject();
             Item it;
-            it.readObject(o);
+            it.fromObject(o);
             add(it);
         }
     }

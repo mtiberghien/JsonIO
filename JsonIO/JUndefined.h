@@ -4,11 +4,11 @@
 
 namespace json
 {
-	class JSONIO_API  JVoid : public IJsonValue
+	class JSONIO_API  JUndefined : public IJsonValue
 	{
 	public:
-		JVoid() {}
-		~JVoid() {}
+		JUndefined() {}
+		~JUndefined() {}
 		E_JsonType getType() const override { return E_JsonType::Undefined; }
 		bool getBool(bool defaultValue = false) const override { return defaultValue; }
 		short getShort(short defaultValue = 0) const override { return defaultValue; }
@@ -27,7 +27,7 @@ namespace json
 		void write(std::ostream& stream, bool indent, int& indentLevel) const override {};
 	};
 
-	class JSONIO_API JVoidError : public JVoid
+	class JUndefinedError : public JUndefined
 	{
 		E_JsonType getType() const override { return E_JsonType::Error; }
 	};

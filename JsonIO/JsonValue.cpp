@@ -1,16 +1,16 @@
 #include "pch.h"
 #include "JsonValue.h"
 #include "JObject.h"
-#include "JVoid.h"
+#include "JUndefined.h"
 #include "JArray.h"
-#include "ioHelper.h"
+#include "JsonIOHelper.h"
 
 namespace json
 {
 	JsonValue::JsonValue(const JObject& ref) : m_ptr(new JObject(ref))
 	{
 	}
-	JsonValue::JsonValue() :m_ptr(new JVoid()) {}
+	JsonValue::JsonValue() :m_ptr(new JUndefined()) {}
 	JsonValue::JsonValue(const JArray& ref) : m_ptr(new JArray(ref))
 	{
 	}
@@ -20,7 +20,7 @@ namespace json
 		switch (ref.getType())
 		{
 		case E_JsonType::Error:
-			m_ptr = std::make_unique<JVoid>();
+			m_ptr = std::make_unique<JUndefined>();
 			break;
 		case E_JsonType::Object:
 			m_ptr = std::make_unique<JObject>(ref.getObject());
@@ -65,11 +65,11 @@ namespace json
 		}
 		case E_JsonType::Undefined:
 		{
-			m_ptr = std::make_unique<JVoid>();
+			m_ptr = std::make_unique<JUndefined>();
 			break;
 		}
 		default:
-			m_ptr = std::make_unique<JVoidError>();
+			m_ptr = std::make_unique<JUndefinedError>();
 			break;
 		}
 	}
@@ -123,88 +123,13 @@ namespace json
 		}
 		case E_JsonType::Undefined:
 		{
-			m_ptr = std::make_unique<JVoid>();
+			m_ptr = std::make_unique<JUndefined>();
 			break;
 		}
 		default:
-			m_ptr = std::make_unique<JVoidError>();
+			m_ptr = std::make_unique<JUndefinedError>();
 			break;
 		}
-	}
-
-	bool JsonValue::read(std::istream& stream, JsonValue& value, bool& hasNext)
-	{
-		bool isOk = false;
-		E_JsonValueType type = readValueType(stream);
-		switch (type)
-		{
-		case E_JsonValueType::Object:
-		{
-			JObject o;
-			if (o.read(stream))
-			{
-				value = o;
-				isOk = true;
-			}
-			break;
-
-		}
-		case E_JsonValueType::StringPrimitive:
-		{
-			std::string s;
-			if (readStringValue(stream, s))
-			{
-				value = s;
-				isOk = true;
-			}
-			break;
-		}
-		case E_JsonValueType::Array:
-		{
-			JArray a;
-			if (a.read(stream))
-			{
-				value = a;
-				isOk = true;
-			}
-			break;
-		}
-		case E_JsonValueType::NonStringPrimitive:
-		{
-			double d;
-			E_JsonType t;
-			if (readNonStringPrimitive(stream, d, t))
-			{
-				switch (t)
-				{
-				case E_JsonType::Bool: value = (bool)d; break;
-				case E_JsonType::Short: value = (short)d; break;
-				case E_JsonType::Int: value = (int)d; break;
-				case E_JsonType::Float: value = (float)d; break;
-				case E_JsonType::Null: value = nullptr; break;
-				default: value = d; break;
-				}
-				isOk = true;
-			}
-			break;
-		}
-		default:
-			break;
-		}
-		if (!isOk)
-		{
-			return false;
-		}
-		hasNext = findFirstNonSpaceCharacter(stream) && stream.peek() == ',';
-		if (hasNext)
-		{
-			stream.get();
-		}
-		else
-		{
-			isOk = stream.peek() == '}' || stream.peek() == ']';
-		}
-		return isOk;
 	}
 }
 

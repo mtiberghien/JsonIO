@@ -66,13 +66,13 @@ namespace json
 
 	void writeProperty(std::ostream& stream, const std::string& key, const JsonValue& value, bool indent, int& indentLevel)
 	{
-		doIndent(stream, indent, indentLevel) << '"' << key << '"' << ": ";
+		JsonIOHelper::doIndent(stream, indent, indentLevel) << '"' << key << '"' << ": ";
 		if ((value.getType() == E_JsonType::Object || value.getType() == E_JsonType::Array) && value.getInt() > 0)
 		{
-			handleIndent(stream, indent, indentLevel, None);
+			JsonIOHelper::handleIndent(stream, indent, indentLevel, None);
 			if (value.getType() == E_JsonType::Object)
 			{
-				doIndent(stream, indent, indentLevel);
+				JsonIOHelper::doIndent(stream, indent, indentLevel);
 			}
 		}
 		value.write(stream, indent, indentLevel);
@@ -83,24 +83,24 @@ namespace json
 		stream << "{";
 		if (!isEmpty())
 		{
-			handleIndent(stream, indent, indentLevel, Increment);
+			JsonIOHelper::handleIndent(stream, indent, indentLevel, Increment);
 			for (auto it = m_properties.begin(); it != m_properties.end(); it++)
 			{
 				writeProperty(stream, it->first, it->second, indent, indentLevel);
 				if (it != std::prev(m_properties.end()))
 				{
 					stream << ", ";
-					handleIndent(stream, indent, indentLevel, None);
+					JsonIOHelper::handleIndent(stream, indent, indentLevel, None);
 				}
 
 			}
-			handleIndent(stream, indent, indentLevel, Decrement);
-			doIndent(stream, indent, indentLevel);
+			JsonIOHelper::handleIndent(stream, indent, indentLevel, Decrement);
+			JsonIOHelper::doIndent(stream, indent, indentLevel);
 		}
 		stream << "}";
 		if (indentLevel == 0)
 		{
-			handleIndent(stream, indent, indentLevel, None);
+			JsonIOHelper::handleIndent(stream, indent, indentLevel, None);
 		}
 	}
 
@@ -114,9 +114,9 @@ namespace json
 
 	bool readKey(std::istream& stream, std::string& key)
 	{
-		if (readStringValue(stream, key))
+		if (JsonIOHelper::readStringValue(stream, key))
 		{
-			return readNextCharacter(stream, ':');
+			return JsonIOHelper::readNextCharacter(stream, ':');
 		}
 		return false;
 	}
@@ -127,7 +127,7 @@ namespace json
 		bool isOk = false;
 		if (readKey(stream, key))
 		{
-			isOk = JsonValue::read(stream, object[key], hasNext);
+			isOk = JsonIOHelper::read(stream, object[key], hasNext);
 		}
 		return isOk;
 	}
@@ -136,7 +136,7 @@ namespace json
 	bool JObject::read(std::istream& stream)
 	{
 		clear();
-		if (readNextCharacter(stream, '{'))
+		if (JsonIOHelper::readNextCharacter(stream, '{'))
 		{
 			bool hasNext = false;
 			bool isOk = false;
@@ -148,7 +148,7 @@ namespace json
 			{
 				return false;
 			}
-			if (readNextCharacter(stream, '}'))
+			if (JsonIOHelper::readNextCharacter(stream, '}'))
 			{
 				return true;
 			}

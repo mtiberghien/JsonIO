@@ -8,14 +8,6 @@
 #define PCH_H
 
 // add headers that you want to pre-compile here
-#include <cctype>
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <cstdlib>
-#include <map>
-#include <memory>
-#include <type_traits>
-#include <iomanip>
-#include <vector>
+
+
 #endif //PCH_H

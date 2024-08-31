@@ -13,8 +13,8 @@ namespace json
 		bool serialize(std::ostream& stream, bool indent = false);
 		bool deserialize(std::istream& stream);
 		bool deserialize(std::string& string);
-		virtual void writeObject(JObject& object) = 0;
-		virtual void readObject(const JObject& object) = 0;
+		virtual void toObject(JObject& object) = 0;
+		virtual void fromObject(const JObject& object) = 0;
 
 	};
 

@@ -140,9 +140,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="IJsonContainer.h" />
     <ClInclude Include="IJsonSerializable.h" />
     <ClInclude Include="IJsonValue.h" />
-    <ClInclude Include="ioHelper.h" />
+    <ClInclude Include="JsonIOHelper.h" />
     <ClInclude Include="JArray.h" />
     <ClInclude Include="JObject.h" />
     <ClInclude Include="JPrimitive.h" />
@@ -150,17 +151,19 @@
     <ClInclude Include="JsonIO.h" />
     <ClInclude Include="JsonItem.h" />
     <ClInclude Include="JsonValue.h" />
-    <ClInclude Include="JVoid.h" />
+    <ClInclude Include="JUndefined.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IJsonContainer.cpp" />
     <ClCompile Include="IJsonSerializable.cpp" />
     <ClCompile Include="JArray.cpp" />
     <ClCompile Include="JObject.cpp" />
     <ClCompile Include="JPrimitive.cpp" />
+    <ClCompile Include="JsonIOHelper.cpp" />
     <ClCompile Include="JsonItem.cpp" />
     <ClCompile Include="JsonValue.cpp" />
-    <ClCompile Include="JVoid.cpp" />
+    <ClCompile Include="JUndefined.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

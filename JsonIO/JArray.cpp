@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "JArray.h"
 #include "JsonValue.h"
-#include "ioHelper.h"
+#include "JsonIOHelper.h"
 #include "JObject.h"
 
 namespace json
@@ -55,30 +55,30 @@ namespace json
 	{
 		if (!isEmpty())
 		{
-			doIndent(stream, indent, indentLevel);
+			JsonIOHelper::doIndent(stream, indent, indentLevel);
 		}
 		stream << "[";
 		if (!isEmpty())
 		{
-			handleIndent(stream, indent, indentLevel, Increment);
+			JsonIOHelper::handleIndent(stream, indent, indentLevel, Increment);
 			for (unsigned int i = 0; i < m_items.size(); i++)
 			{
-				doIndent(stream, indent, indentLevel);
+				JsonIOHelper::doIndent(stream, indent, indentLevel);
 				m_items[i].write(stream, indent, indentLevel);
 				if (i < m_items.size() - 1)
 				{
 					stream << ", ";
-					handleIndent(stream, indent, indentLevel, None);
+					JsonIOHelper::handleIndent(stream, indent, indentLevel, None);
 				}
 
 			}
-			handleIndent(stream, indent, indentLevel, Decrement);
-			doIndent(stream, indent, indentLevel);
+			JsonIOHelper::handleIndent(stream, indent, indentLevel, Decrement);
+			JsonIOHelper::doIndent(stream, indent, indentLevel);
 		}
 		stream << "]";
 		if (indentLevel == 0)
 		{
-			handleIndent(stream, indent, indentLevel, None);
+			JsonIOHelper::handleIndent(stream, indent, indentLevel, None);
 		}
 	}
 
@@ -93,20 +93,20 @@ namespace json
 	bool JArray::read(std::istream& stream)
 	{
 		clear();
-		if (readNextCharacter(stream, '['))
+		if (JsonIOHelper::readNextCharacter(stream, '['))
 		{
 			bool hasNext = false;
 			bool isOk = false;
 			do
 			{
 				m_items.push_back({});
-				isOk = JsonValue::read(stream, m_items.back(), hasNext);
+				isOk = JsonIOHelper::read(stream, m_items.back(), hasNext);
 			} while (isOk && hasNext);
 			if (!isOk)
 			{
 				return false;
 			}
-			if (readNextCharacter(stream, ']'))
+			if (JsonIOHelper::readNextCharacter(stream, ']'))
 			{
 				return true;
 			}

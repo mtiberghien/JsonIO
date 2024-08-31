@@ -27,7 +27,7 @@
     <ClInclude Include="IJsonValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ioHelper.h">
+    <ClInclude Include="JsonIOHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JArray.h">
@@ -42,7 +42,7 @@
     <ClInclude Include="JsonValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JVoid.h">
+    <ClInclude Include="JUndefined.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JsonIO.h">
@@ -52,6 +52,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JsonItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IJsonContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,10 +77,16 @@
     <ClCompile Include="JsonValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JVoid.cpp">
+    <ClCompile Include="JUndefined.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsonItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonIOHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IJsonContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

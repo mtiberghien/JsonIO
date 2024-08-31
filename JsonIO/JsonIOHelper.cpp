@@ -1,25 +1,25 @@
-#pragma once
 #include "pch.h"
-
+#include "JsonIOHelper.h"
+#include "JsonValue.h"
 
 namespace json
 {
 	const std::map<std::string, char> g_escapes_read = { {"\\r", '\r'} , {"\\n", '\n'}, {"\\t", '\t' }, { "\\f", '\f' }, { "\\v", '\v' } };
-	enum E_IndentMode { Increment, Decrement, None };
 
-	static bool ichar_equals(char a, char b)
+
+	bool JsonIOHelper::ichar_equals(char a, char b)
 	{
 		return std::tolower(static_cast<unsigned char>(a)) ==
 			std::tolower(static_cast<unsigned char>(b));
 	}
 
-	static bool iequals(const std::string& a, const std::string& b)
+	bool JsonIOHelper::iequals(const std::string& a, const std::string& b)
 	{
 		return a.size() == b.size() &&
 			std::equal(a.begin(), a.end(), b.begin(), ichar_equals);
 	}
 
-	static void handleIndent(std::ostream& stream, bool indent, int& indentLevel, E_IndentMode mode = E_IndentMode::None)
+	void JsonIOHelper::handleIndent(std::ostream& stream, bool indent, int& indentLevel, E_IndentMode mode)
 	{
 		switch (mode)
 		{
@@ -33,13 +33,13 @@ namespace json
 		}
 	}
 
-	static std::ostream& doIndent(std::ostream& stream, bool indent, int& indentLevel)
+	std::ostream& JsonIOHelper::doIndent(std::ostream& stream, bool indent, int& indentLevel)
 	{
 		stream << std::string(indent * indentLevel * 4, ' ');
 		return stream;
 	}
 
-	static bool findFirstNonSpaceCharacter(std::istream& stream)
+	bool JsonIOHelper::findFirstNonSpaceCharacter(std::istream& stream)
 	{
 		while (!stream.eof())
 		{
@@ -56,7 +56,7 @@ namespace json
 		return false;
 	}
 
-	static E_JsonValueType readValueType(std::istream& stream)
+	E_JsonValueType JsonIOHelper::readValueType(std::istream& stream)
 	{
 		if (findFirstNonSpaceCharacter(stream))
 		{
@@ -72,7 +72,7 @@ namespace json
 	}
 
 
-	static bool readNextCharacter(std::istream& stream, char expectedChar)
+	bool JsonIOHelper::readNextCharacter(std::istream& stream, char expectedChar)
 	{
 		while (!stream.eof() && stream.peek() != expectedChar)
 		{
@@ -86,7 +86,7 @@ namespace json
 		return false;
 	}
 
-	static bool readStringValue(std::istream& stream, std::string& value)
+	bool JsonIOHelper::readStringValue(std::istream& stream, std::string& value)
 	{
 		std::ostringstream s;
 		if (readNextCharacter(stream, '"'))
@@ -116,52 +116,21 @@ namespace json
 		return false;
 	}
 
-	static bool tryGetNumber(const std::string& value, double& result, E_JsonType& type)
-	{
-		char* end = nullptr;
-		type = E_JsonType::Undefined;
-		double val = strtod(value.c_str(), &end);
-		if (end != value.c_str() && *end == '\0' && val != HUGE_VAL)
-		{
-			result = val;
-			short s = (short)val;
-			if (s == val)
-			{
-				type = E_JsonType::Short;
-			}
-			else
-			{
-				int i = (int)val;
-				if (i == val)
-				{
-					type = E_JsonType::Int;
-				}
-				else
-				{
-					type = E_JsonType::Double;
-				}
-			}
-			
-			return true;
-		};
-		return false;
-	}
-
-	static bool  isNumber(const std::string& value)
+	bool JsonIOHelper::isNumber(const std::string& value)
 	{
 		double d;
 		E_JsonType t;
 		return tryGetNumber(value, d, t);
 	}
 
-	static bool setNonStringPrimitiveValue(std::string& primitive, double& result, E_JsonType& type)
+	bool JsonIOHelper::setNonStringPrimitiveValue(std::string& primitive, double& result, E_JsonType& type)
 	{
-		if (json::iequals(primitive, "null"))
+		if (iequals(primitive, "null"))
 		{
 			type = E_JsonType::Null;
 			return true;
 		}
-		if (json::iequals(primitive , "true") || json::iequals( primitive , "false"))
+		if (iequals(primitive, "true") || iequals(primitive, "false"))
 		{
 			result = (double)(iequals(primitive, "true"));
 			type = E_JsonType::Bool;
@@ -174,7 +143,7 @@ namespace json
 
 	}
 
-	static bool readNonStringPrimitive(std::istream& stream, double& result, E_JsonType& type)
+	bool JsonIOHelper::readNonStringPrimitive(std::istream& stream, double& result, E_JsonType& type)
 	{
 		std::ostringstream s;
 		char c;
@@ -193,6 +162,81 @@ namespace json
 		std::string value = s.str();
 		return !value.empty() && setNonStringPrimitiveValue(value, result, type);
 	}
-}
 
+	bool JsonIOHelper::read(std::istream& stream, JsonValue& value, bool& hasNext)
+	{
+		bool isOk = false;
+		E_JsonValueType type = JsonIOHelper::readValueType(stream);
+		switch (type)
+		{
+		case E_JsonValueType::Object:
+		{
+			JObject o;
+			if (o.read(stream))
+			{
+				value = o;
+				isOk = true;
+			}
+			break;
+
+		}
+		case E_JsonValueType::StringPrimitive:
+		{
+			std::string s;
+			if (JsonIOHelper::readStringValue(stream, s))
+			{
+				value = s;
+				isOk = true;
+			}
+			break;
+		}
+		case E_JsonValueType::Array:
+		{
+			JArray a;
+			if (a.read(stream))
+			{
+				value = a;
+				isOk = true;
+			}
+			break;
+		}
+		case E_JsonValueType::NonStringPrimitive:
+		{
+			double d;
+			E_JsonType t;
+			if (JsonIOHelper::readNonStringPrimitive(stream, d, t))
+			{
+				switch (t)
+				{
+				case E_JsonType::Bool: value = (bool)d; break;
+				case E_JsonType::Short: value = (short)d; break;
+				case E_JsonType::Int: value = (int)d; break;
+				case E_JsonType::Float: value = (float)d; break;
+				case E_JsonType::Null: value = nullptr; break;
+				default: value = d; break;
+				}
+				isOk = true;
+			}
+			break;
+		}
+		default:
+			break;
+		}
+		if (!isOk)
+		{
+			return false;
+		}
+		hasNext = JsonIOHelper::findFirstNonSpaceCharacter(stream) && stream.peek() == ',';
+		if (hasNext)
+		{
+			stream.get();
+		}
+		else
+		{
+			isOk = stream.peek() == '}' || stream.peek() == ']';
+		}
+		return isOk;
+	}
+
+}
 

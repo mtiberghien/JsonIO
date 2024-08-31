@@ -17,7 +17,7 @@ namespace json
 		if (stream.good())
 		{
 			JObject j;
-			writeObject(j);
+			toObject(j);
 			j.write(stream, indent);
 		}
 		return false;
@@ -32,7 +32,7 @@ namespace json
 			result = o.read(stream);
 			if (result)
 			{
-				readObject(o);
+				fromObject(o);
 			}
 		}
 		return result;

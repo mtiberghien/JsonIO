@@ -16,8 +16,8 @@ namespace json
 		operator std::string() const { return getString(); }
 		operator JObject& () { return getObject(); }
 		operator JArray& () { return getArray(); }
-		explicit operator const JObject& () const { return getObject(); }
-		explicit operator const JArray& () const { return getArray(); }
+	    operator const JObject& () const { return getObject(); }
+		operator const JArray& () const { return getArray(); }
 
 	};
 
