@@ -6,7 +6,7 @@ The purpose of this project is to have a json parser
 The interface `IJsonSerializable` is dedicated to define `readObject` and `writeObject` method which is implemented by the model classes to map each property to a common object: `JObject` which is a dictionary mapping keys to `JsonValue` object.
 A `JsonValue` can be one of `JArray`, `Jobject` or a `JPrimitive` which supports boolean, short, int, float, double, std::string and const char* primitives.
 ## IJsonSerializable
-```assembly_x86
+```cpp
 #include "Json.h"
 
 using namespace json;
@@ -96,7 +96,26 @@ int main()
     d2.deserialize(djson);
     d2.add({ "device_3", 3 });
     std::cout << d2.to_string() << std::endl;
-    std::cout << "items[1]: " <<  d2[1].getName() << std::endl;
+    std::cout << "items[1]: " << d2[1].getName() << std::endl;
+
+    // Expected results
+    /*
+    {
+        "devices":
+        [
+            {
+               "id": 1,
+               "name": "device_1"
+            },
+            {
+                "id": 2,
+                "name": "device_2"
+            }
+        ]
+    }
+    {"devices": [{"id": 1, "name": "device_1"}, {"id": 2, "name": "device_2"}, {"id": 3, "name": "device_3"}]}
+    items[1]: device_2
+    */
 
 }
 
@@ -111,7 +130,7 @@ getInt on an object or an array will return the size of the object (number of pr
 An object property can be accessed using an index but user should be aware that the index order depends on the alphabetical order of properties.
 An array item can be accessed with a string if it can be parsed as a valid index of the array.
 
-```assembly_x86
+```cpp
 #include "Json.h"
 #include <iostream>
 
@@ -135,14 +154,27 @@ int main()
     o["values"] = a2;
     std::cout << o.getString() << std::endl;
     o.write(std::cout, true);
-    std::cout << "ids[0]: " << o[0]["0"].getString() << std::endl;
+    std::cout << "ids[0]: " << o["ids"][0].getString() << std::endl;
+    std::cout << "o[0][\"0\"]: " << (std::string)o[0]["0"] << std::endl;
     std::cout << "isOk: " << o["isOk"].getBool() << std::endl;
     std::cout << "values: " << o["values"].getString() << std::endl;
     std::cout << "values[1]: " << (int)o["values"][1] << std::endl;
     std::cout << "ids[2].id: " << o.find("ids[2].id").getInt() << std::endl;
     std::cout << "price: " << o["price"].getDouble() << std::endl;
     std::cout << "test default: " << o.find("path.does.not.exist").getString("not found") << std::endl;
-    std::cout << "ids[0]: " << (std::string)o[0]["0"] << std::endl;
+
+    // Expected results
+    /*
+
+        ids[0]: {"id", 1}
+        o[0]["0"]: {"id", 1}
+        isOk: true
+        values: [10, "20", {"id": 1, "name": "item"}, null]
+        values[1]: 20
+        ids[2].id: 3
+        price: 35.78
+        test default: not found
+    */
 }
 
 ```

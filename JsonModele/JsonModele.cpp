@@ -78,29 +78,9 @@ private:
     std::vector<Item> m_items;
 };
 
-std::string to_string(E_JsonType type)
-{
-    switch (type)
-    {
-    case E_JsonType::Object: return "Object";
-    case E_JsonType::Array: return "Array";
-    case E_JsonType::Bool: return "Boolean";
-    case E_JsonType::Short: return "Short";
-    case E_JsonType::Int: return "Integer";
-    case E_JsonType::Float: return "Float";
-    case E_JsonType::Double: return "Double";
-    case E_JsonType::String: return "String";
-    case E_JsonType::Undefined: return "Void";
-    case E_JsonType::Null: return "Null";
-    case E_JsonType::Error: return "Error";
-    default:return "Unkwown";
-        break;
-    }
-}
-
 std::ostream& operator<<(std::ostream& stream, E_JsonType type)
 {
-    stream << to_string(type);
+    stream << toString(type);
     return stream;
 }
 
@@ -145,15 +125,65 @@ void TestJObject()
     o["values"] = a2;
     std::cout << o.getString() << std::endl;
     o.write(std::cout, true);
-    std::cout << "ids[0]: " << o[0]["0"].getString() << std::endl;
+    std::cout << "ids[0]: " << o["ids"][0].getString() << std::endl;
+    std::cout << "o[0][\"0\"]: " << (std::string)o[0]["0"] << std::endl;
     std::cout << "isOk: " << o["isOk"].getBool() << std::endl;
     std::cout << "values: " << o["values"].getString() << std::endl;
     std::cout << "values[1]: " << (int)o["values"][1] << std::endl;
     std::cout << "ids[2].id: " << o.find("ids[2].id").getInt() << std::endl;
     std::cout << "price: " << o["price"].getDouble() << std::endl;
     std::cout << "test default: " << o.find("path.does.not.exist").getString("not found") << std::endl;
-    std::cout << "ids[0]: " << (std::string)o[0]["0"] << std::endl;
+
+    // Expected results
+    /*
+
+        ids[0]: {"id", 1}
+        o[0]["0"]: {"id", 1}
+        isOk: true
+        values: [10, "20", {"id": 1, "name": "item"}, null]
+        values[1]: 20
+        ids[2].id: 3
+        price: 35.78
+        test default: not found
+    */
 }
+
+
+
+void TestSerialization()
+{
+    Items d;
+    d.add({ "device_1", 1 });
+    d.add({ "device_2" , 2 });
+    d.serialize(std::cout, true);
+    Items d2;
+    std::string djson = d.serialize(false);
+    d2.deserialize(djson);
+    d2.add({ "device_3", 3 });
+    std::cout << d2.to_string() << std::endl;
+    std::cout << "items[1]: " << d2[1].getName() << std::endl;
+
+    // Expected results
+    /*
+    {
+        "devices":
+        [
+            {
+               "id": 1,
+               "name": "device_1"
+            },
+            {
+                "id": 2,
+                "name": "device_2"
+            }
+        ]
+    }
+    {"devices": [{"id": 1, "name": "device_1"}, {"id": 2, "name": "device_2"}, {"id": 3, "name": "device_3"}]}
+    items[1]: device_2
+    */
+}
+
+
 
 
 int main()
@@ -226,16 +256,8 @@ int main()
     TestValue(o.find("o.tab[1]"));
     o.clear();
     o.write(std::cout, true);
-    Items d;
-    d.add({ "device_1", 1 });
-    d.add({ "device_2" , 2 });
-    d.serialize(std::cout, true);
-    Items d2;
-    std::string djson = d.serialize(false);
-    d2.deserialize(djson);
-    d2.add({ "device_3", 3 });
-    std::cout << d2.to_string() << std::endl;
-    std::cout << "items[1]: " <<  d2[1].getName() << std::endl;
+    
+    TestSerialization();
     TestJObject();
 
     JObject obj;

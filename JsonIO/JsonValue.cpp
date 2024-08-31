@@ -15,67 +15,119 @@ namespace json
 	{
 	}
 
+	JsonValue::JsonValue(const JsonValue& ref)
+	{
+		switch (ref.getType())
+		{
+		case E_JsonType::Error:
+			m_ptr = std::make_unique<JVoid>();
+			break;
+		case E_JsonType::Object:
+			m_ptr = std::make_unique<JObject>(ref.getObject());
+			break;
+		case E_JsonType::Array:
+			m_ptr = std::make_unique <JArray>(ref.getArray());
+			break;
+		case E_JsonType::Bool:
+		{
+			m_ptr = std::make_unique<JPrimitive<bool>>(ref.getBool());
+			break;
+		}
+		case E_JsonType::Short:
+		{
+			m_ptr = std::make_unique<JPrimitive<short>>(ref.getShort());
+			break;
+		}
+		case E_JsonType::Int:
+		{
+			m_ptr = std::make_unique<JPrimitive<int>>(ref.getInt());
+			break;
+		}
+		case E_JsonType::Float:
+		{
+			m_ptr = std::make_unique<JPrimitive<float>>(ref.getFloat());
+			break;
+		}
+		case E_JsonType::Double:
+		{
+			m_ptr = std::make_unique<JPrimitive<double>>(ref.getDouble());
+			break;
+		}
+		case E_JsonType::String:
+		{
+			m_ptr = std::make_unique<JPrimitive<std::string>>(ref.getString());
+			break;
+		}
+		case E_JsonType::Null:
+		{
+			m_ptr = std::make_unique<JPrimitive<std::nullptr_t>>(nullptr);
+			break;
+		}
+		case E_JsonType::Undefined:
+		{
+			m_ptr = std::make_unique<JVoid>();
+			break;
+		}
+		default:
+			m_ptr = std::make_unique<JVoidError>();
+			break;
+		}
+	}
+
 	JsonValue::JsonValue(E_JsonType a_Type)
 	{
 		switch (a_Type)
 		{
 		case E_JsonType::Bool:
 		{
-			bool v{ false };
-			m_ptr = std::make_shared<JPrimitive<bool>>(v);
+			m_ptr = std::make_unique<JPrimitive<bool>>(false);
 			break;
 		}
 		case E_JsonType::Short:
 		{
-			short v{ 0 };
-			m_ptr = std::make_shared<JPrimitive<short>>(v);
+			m_ptr = std::make_unique<JPrimitive<short>>((short)0);
 			break;
 		}
 		case E_JsonType::Int:
 		{
-			int v{ 0 };
-			m_ptr = std::make_shared<JPrimitive<int>>(v);
+			m_ptr = std::make_unique<JPrimitive<int>>(0);
 			break;
 		}
 		case E_JsonType::Float:
 		{
-			float v{ 0 };
-			m_ptr = std::make_shared<JPrimitive<float>>(v);
+			m_ptr = std::make_unique<JPrimitive<float>>((float)0);
 			break;
 		}
 		case E_JsonType::Double:
 		{
-			double v{ 0 };
-			m_ptr = std::make_shared<JPrimitive<double>>(v);
+			m_ptr = std::make_unique<JPrimitive<double>>((double)0);
 			break;
 		}
 		case E_JsonType::String:
 		{
-			std::string v{ "" };
-			m_ptr = std::make_shared<JPrimitive<std::string>>(v);
+			m_ptr = std::make_unique<JPrimitive<std::string>>("");
 			break;
 		}
 		case E_JsonType::Object:
 		{
-			m_ptr = std::make_shared<JObject>();
+			m_ptr = std::make_unique<JObject>();
 			break;
 		}
 		case E_JsonType::Array:
-			m_ptr = std::make_shared<JArray>();
+			m_ptr = std::make_unique<JArray>();
 			break;
 		case E_JsonType::Null:
 		{
-			nullptr_t v = nullptr;
-			m_ptr = std::make_shared<JPrimitive<std::nullptr_t>>(v);
+			m_ptr = std::make_unique<JPrimitive<std::nullptr_t>>(nullptr);
 			break;
 		}
 		case E_JsonType::Undefined:
 		{
-			m_ptr = std::make_shared<JVoid>();
+			m_ptr = std::make_unique<JVoid>();
 			break;
 		}
 		default:
-			m_ptr = std::make_shared<JVoidError>();
+			m_ptr = std::make_unique<JVoidError>();
 			break;
 		}
 	}
@@ -139,10 +191,18 @@ namespace json
 		default:
 			break;
 		}
+		if (!isOk)
+		{
+			return false;
+		}
 		hasNext = findFirstNonSpaceCharacter(stream) && stream.peek() == ',';
 		if (hasNext)
 		{
 			stream.get();
+		}
+		else
+		{
+			isOk = stream.peek() == '}' || stream.peek() == ']';
 		}
 		return isOk;
 	}

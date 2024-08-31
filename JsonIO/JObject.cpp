@@ -36,7 +36,9 @@ namespace json
 	{
 		if (index >= 0 && (unsigned int)index < m_properties.size())
 		{
-			return m_properties[getKeys()[index]];
+			auto it = m_properties.begin();
+			std::advance(it, index);
+			return it->second;
 		}
 		return JVoidProvider::getError();
 	}
@@ -45,7 +47,9 @@ namespace json
 	{
 		if (index >= 0 && (unsigned int)index < m_properties.size())
 		{
-			return m_properties.at(getKeys()[index]);
+			auto it = m_properties.begin();
+			std::advance(it, index);
+			return m_properties.at(it->first);
 		}
 		return JVoidProvider::getError();
 	}
@@ -60,7 +64,7 @@ namespace json
 		return result;
 	}
 
-	void WriteProperty(std::ostream& stream, const std::string& key, const JsonValue& value, bool indent, int& indentLevel)
+	void writeProperty(std::ostream& stream, const std::string& key, const JsonValue& value, bool indent, int& indentLevel)
 	{
 		doIndent(stream, indent, indentLevel) << '"' << key << '"' << ": ";
 		if ((value.getType() == E_JsonType::Object || value.getType() == E_JsonType::Array) && value.getInt() > 0)
@@ -82,7 +86,7 @@ namespace json
 			handleIndent(stream, indent, indentLevel, Increment);
 			for (auto it = m_properties.begin(); it != m_properties.end(); it++)
 			{
-				WriteProperty(stream, it->first, it->second, indent, indentLevel);
+				writeProperty(stream, it->first, it->second, indent, indentLevel);
 				if (it != std::prev(m_properties.end()))
 				{
 					stream << ", ";

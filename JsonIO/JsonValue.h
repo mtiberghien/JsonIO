@@ -15,10 +15,10 @@ namespace json
 		JsonValue();
 		JsonValue(E_JsonType a_Type);
 		template<class T>
-		JsonValue(T value) :m_ptr(std::make_shared<JPrimitive<T>>(value)) {}
+		JsonValue(T value) :m_ptr(std::make_unique<JPrimitive<T>>(value)) {}
 		JsonValue(const JObject& ref);
 		JsonValue(const JArray& ref);
-		JsonValue(const JsonValue& ref) :m_ptr(ref.m_ptr) {}
+		JsonValue(const JsonValue& ref);
 		E_JsonType getType() const override { return m_ptr->getType(); }
 		bool getBool(bool defaultValue = false) const override { return m_ptr->getBool(defaultValue); }
 		short getShort(short defaultValue = 0) const override { return m_ptr->getShort(defaultValue); }
@@ -40,12 +40,12 @@ namespace json
 		{
 			if (getType() != E_JsonType::Error)
 			{
-				this->m_ptr = value.m_ptr;
+				this->m_ptr = JsonValue(value).m_ptr;
 			}
 			return *this;
 		}
 	private:
-		std::shared_ptr<IJsonValue> m_ptr;
+		std::unique_ptr<IJsonValue> m_ptr;
 
 	};
 }

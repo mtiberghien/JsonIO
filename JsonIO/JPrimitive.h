@@ -5,6 +5,7 @@
 #include "JsonIO.h"
 #include "JObject.h"
 #include "JArray.h"
+#include <limits>
 
 namespace json
 {
@@ -18,7 +19,7 @@ namespace json
 	class JPrimitive : public JsonItem
 	{
 	public:
-		JPrimitive(T value) : m_value(value)
+		JPrimitive(const T& value) : m_value(value)
 		{
 		}
 		JPrimitive(T&& value) : m_value(std::move(value)) {}
@@ -124,7 +125,7 @@ namespace json
 		std::string getString<double>(const std::string& defaultValue) const
 		{
 			std::ostringstream s;
-			s << std::setprecision(12);
+			s << std::setprecision(std::numeric_limits<double>::digits10 + 1);
 			s << m_value;
 			return s.str();
 		}

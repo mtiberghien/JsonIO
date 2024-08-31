@@ -220,5 +220,20 @@ namespace JsonIOtests
 			JsonValue v = o;
 			Assert::IsTrue(v == o);
 		}
+
+		TEST_METHOD(JObjectReadError)
+		{
+			JObject o;
+			Assert::IsFalse(o.read(""));
+			Assert::IsFalse(o.read(R"("test":value)"));
+			Assert::IsFalse(o.read(R"({"test":1")"));
+			Assert::IsFalse(o.read(R"({"test":value})"));
+			Assert::IsFalse(o.read(R"({test:"value"})"));
+			Assert::IsFalse(o.read(R"({"test":1 "test2":"deux"})"));
+			Assert::IsFalse(o.read(R"({"test":1, "test2": 2,})"));
+			Assert::IsFalse(o.read(R"({"test":[1,2,3}})"));
+			Assert::IsFalse(o.read(R"({"test":[1,2 3])"));
+			Assert::IsFalse(o.read(R"({"test":1,2, 3]})"));
+		}
 	};
 }

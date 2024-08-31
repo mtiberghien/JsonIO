@@ -7,6 +7,8 @@ namespace json
 	enum class E_JsonType { Object, Array, Bool, Short, Int, Float, Double, String, Null, Undefined, Error };
 	enum class E_JsonValueType { Object, Array, StringPrimitive, NonStringPrimitive, Error};
 
+	JSONIO_API extern std::string toString(E_JsonType type);
+
 	class JsonValue;
 	class JObject;
 	class JArray;
