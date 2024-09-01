@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "JsonItem.h"
+#include "JsonIOHelper.h"
 
 namespace json
 {
@@ -19,6 +20,24 @@ namespace json
 		case E_JsonType::Error: return "Error";
 		default: return "Undefined";
 		}
+	}
+
+	bool JsonItem::isNumber() const
+	{
+		if (isPrimitive() && !isNull())
+		{
+			if (!isString())
+			{
+				return true;
+			}
+			else
+			{
+				double d;
+				E_JsonType t;
+				return JsonIOHelper::tryGetNumber(getString(), d, t);
+			}
+		}
+		return false;
 	}
 }
 

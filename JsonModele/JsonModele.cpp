@@ -295,5 +295,11 @@ int main()
     TestValue(aError);
     TestValue(JArrayProvider::getArrayError());
 
+    JsonValue vFind = oTest.find("id");
+    TestValue(vFind);
+    vFind = oTest.find("notFound");
+    TestValue(vFind);
+    TestValue(oTest["id"]);
+
     std::getchar();
 }

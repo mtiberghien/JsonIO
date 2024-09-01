@@ -27,6 +27,9 @@ namespace JsonIOtests
 			Assert::AreEqual(2, o.getInt());
 			Assert::IsFalse(o.isEmpty());
 			Assert::IsTrue( o["b"].getType() == E_JsonType::Bool);
+			Assert::IsTrue(o["b2"].isBool());
+			Assert::IsTrue(o["b"].isNumber());
+			Assert::IsTrue(o["b2"].isPrimitive());
 			Assert::IsTrue(o["b"].getBool());
 			Assert::IsFalse(o["b2"].getBool());
 		}
@@ -38,6 +41,8 @@ namespace JsonIOtests
 			Assert::AreEqual(1, o.getInt());
 			Assert::IsFalse(o.isEmpty());
 			Assert::IsTrue(o["s"].getType() == E_JsonType::Short);
+			Assert::IsTrue(o["s"].isNumber());
+			Assert::IsTrue(o["s"].isPrimitive());
 			Assert::AreEqual((short)10, o["s"].getShort());
 		}
 
@@ -48,6 +53,8 @@ namespace JsonIOtests
 			Assert::AreEqual(1, o.getInt());
 			Assert::IsFalse(o.isEmpty());
 			Assert::IsTrue(o["i"].getType() == E_JsonType::Int);
+			Assert::IsTrue(o["i"].isNumber());
+			Assert::IsTrue(o["i"].isPrimitive());
 			Assert::AreEqual(33000, o["i"].getInt());
 		}
 
@@ -58,6 +65,8 @@ namespace JsonIOtests
 			Assert::AreEqual(1, o.getInt());
 			Assert::IsFalse(o.isEmpty());
 			Assert::IsTrue(o["f"].getType() == E_JsonType::Float);
+			Assert::IsTrue(o["f"].isNumber());
+			Assert::IsTrue(o["f"].isPrimitive());
 			Assert::AreEqual((float)3.14, o["f"].getFloat());
 		}
 
@@ -68,6 +77,8 @@ namespace JsonIOtests
 			Assert::AreEqual(1, o.getInt());
 			Assert::IsFalse(o.isEmpty());
 			Assert::IsTrue(o["d"].getType() == E_JsonType::Double);
+			Assert::IsTrue(o["d"].isNumber());
+			Assert::IsTrue(o["d"].isPrimitive());
 			Assert::AreEqual(3.141592653, o["d"].getDouble());
 		}
 
@@ -75,9 +86,15 @@ namespace JsonIOtests
 		{
 			JObject o;
 			o["st"] = "Test";
-			Assert::AreEqual(1, o.getInt());
+			o["st2"] = "3.14";
+			Assert::AreEqual(2, o.getInt());
 			Assert::IsFalse(o.isEmpty());
 			Assert::IsTrue(o["st"].getType() == E_JsonType::String);
+			Assert::IsTrue(o["st2"].isNumber());
+			Assert::IsFalse(o["st"].isNumber());
+			Assert::IsTrue(o["st"].isString());
+			Assert::IsTrue(o["st2"].isString());
+			Assert::IsTrue(o["st"].isPrimitive());
 			Assert::AreEqual(std::string{"Test"}, o["st"].getString());
 		}
 
@@ -90,6 +107,8 @@ namespace JsonIOtests
 			Assert::AreEqual(1, o.getInt());
 			Assert::IsFalse(o.isEmpty());
 			Assert::IsTrue(o["o"].getType() == E_JsonType::Object);
+			Assert::IsTrue(o["o"].isObject());
+			Assert::IsFalse(o.isPrimitive());
 			Assert::AreEqual(std::string{ "Test" }, o["o"]["s"].getString());
 		}
 
@@ -106,6 +125,8 @@ namespace JsonIOtests
 			Assert::IsFalse(o.isEmpty());
 			Assert::IsTrue(o["a"].getType() == E_JsonType::Array);
 			Assert::AreEqual(3, o["a"].getInt());
+			Assert::IsTrue(o["a"].isArray());
+			Assert::IsFalse(a.isPrimitive());
 			for (int i = 1; i <= 3; i++)
 			{
 				Assert::AreEqual(i, o["a"][i - 1].getInt());
@@ -119,6 +140,9 @@ namespace JsonIOtests
 			Assert::AreEqual(1, o.getInt());
 			Assert::IsFalse(o.isEmpty());
 			Assert::IsTrue(o["n"].getType() == E_JsonType::Null);
+			Assert::IsTrue(o["n"].isNull());
+			Assert::IsTrue(o["n"].isPrimitive());
+			Assert::IsFalse(o["n"].isNumber());
 			Assert::AreEqual(std::string{ "null" }, o["n"].getString());
 		}
 
@@ -206,6 +230,8 @@ namespace JsonIOtests
 			v = o.find("a[1].value");
 			Assert::IsTrue(v.getType() == E_JsonType::Short);
 			Assert::AreEqual(2, v.getInt());
+			JsonValue& v2 = o.find("test.not.found");
+			Assert::IsTrue(v2.isError());
 		}
 
 		TEST_METHOD(JObjectInit)

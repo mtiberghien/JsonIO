@@ -11,6 +11,19 @@ namespace JsonIOtests
 {
 	TEST_CLASS(JsonValuetests)
 	{
+		TEST_METHOD(VoidValue)
+		{
+			JsonValue v;
+			Assert::IsTrue(v.getType() == E_JsonType::Undefined);
+			Assert::IsTrue(v.isUndefined());
+			JObject o;
+			JsonValue& vRef = o["test"];
+			Assert::IsTrue(vRef.isUndefined());
+
+			JArray a;
+			a << JsonValue{};
+			Assert::IsTrue(a[0].isUndefined());
+		}
 		TEST_METHOD(TypeInitialization)
 		{
 			JsonValue v;

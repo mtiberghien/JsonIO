@@ -142,7 +142,7 @@ namespace json
 		{
 			double d;
 			E_JsonType t;
-			if (tryGetNumber(getString(), d, t))
+			if (JsonIOHelper::tryGetNumber(getString(), d, t))
 			{
 				return (float)d;
 			}
@@ -169,7 +169,7 @@ namespace json
 		{
 			double d;
 			E_JsonType t;
-			if (tryGetNumber(this->getString(), d, t))
+			if (JsonIOHelper::tryGetNumber(this->getString(), d, t))
 			{
 				return d;
 			}
@@ -195,7 +195,7 @@ namespace json
 		{
 			double d;
 			E_JsonType t;
-			if (tryGetNumber(getString(), d, t))
+			if (JsonIOHelper::tryGetNumber(getString(), d, t))
 			{
 				return (int)d;
 			}
@@ -221,7 +221,7 @@ namespace json
 		{
 			double d;
 			E_JsonType t;
-			if (tryGetNumber(getString(), d, t))
+			if (JsonIOHelper::tryGetNumber(getString(), d, t))
 			{
 				return (short)d;
 			}

@@ -29,6 +29,8 @@ namespace json
 
 	class JUndefinedError : public JUndefined
 	{
+	public :
+		JUndefinedError() {}
 		E_JsonType getType() const override { return E_JsonType::Error; }
 	};
 

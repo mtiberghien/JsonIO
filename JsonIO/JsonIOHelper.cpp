@@ -6,6 +6,36 @@ namespace json
 {
 	const std::map<std::string, char> g_escapes_read = { {"\\r", '\r'} , {"\\n", '\n'}, {"\\t", '\t' }, { "\\f", '\f' }, { "\\v", '\v' } };
 
+	bool JsonIOHelper::tryGetNumber(const std::string& value, double& result, E_JsonType& type)
+	{
+		char* end = nullptr;
+		type = E_JsonType::Undefined;
+		double val = strtod(value.c_str(), &end);
+		if (end != value.c_str() && *end == '\0' && val != HUGE_VAL)
+		{
+			result = val;
+			short s = (short)val;
+			if (s == val)
+			{
+				type = E_JsonType::Short;
+			}
+			else
+			{
+				int i = (int)val;
+				if (i == val)
+				{
+					type = E_JsonType::Int;
+				}
+				else
+				{
+					type = E_JsonType::Double;
+				}
+			}
+
+			return true;
+		};
+		return false;
+	}
 
 	bool JsonIOHelper::ichar_equals(char a, char b)
 	{

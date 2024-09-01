@@ -10,7 +10,7 @@ namespace json
 	JsonValue& JArray::operator[](const std::string& key) {
 		double d;
 		E_JsonType t;
-		if (tryGetNumber(key, d, t))
+		if (JsonIOHelper::tryGetNumber(key, d, t))
 		{
 			return m_items[(int)d];
 		}
@@ -20,7 +20,7 @@ namespace json
 	const JsonValue& JArray::operator[](const std::string& key) const {
 		double d;
 		E_JsonType t;
-		if (tryGetNumber(key, d, t))
+		if (JsonIOHelper::tryGetNumber(key, d, t))
 		{
 			return m_items.at((int)d);
 		}

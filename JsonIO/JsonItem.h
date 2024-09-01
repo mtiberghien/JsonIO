@@ -1,5 +1,6 @@
 #pragma once
 #include "IJsonValue.h"
+#include "JsonIO.h"
 
 namespace json
 {
@@ -18,6 +19,25 @@ namespace json
 		operator JArray& () { return getArray(); }
 	    operator const JObject& () const { return getObject(); }
 		operator const JArray& () const { return getArray(); }
+		bool isError() const { return getType() == E_JsonType::Error; }
+		bool isObject() const { return getType() == E_JsonType::Object; }
+		bool isArray() const { return getType() == E_JsonType::Array; }
+		bool isUndefined() const { return getType() == E_JsonType::Undefined; }
+		bool isNull() const { return getType() == E_JsonType::Null; }
+		bool isPrimitive() const {
+			switch (getType())
+			{
+			case E_JsonType::Error:
+			case E_JsonType::Object:
+			case E_JsonType::Array:
+			case E_JsonType::Undefined:
+				return false;
+			default: return true;
+			}
+		}
+		bool isBool() const { return getType() == E_JsonType::Bool; }
+		bool isString() const { return getType() == E_JsonType::String; }
+		JSONIO_API bool isNumber() const;
 
 	};
 
