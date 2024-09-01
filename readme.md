@@ -76,9 +76,9 @@ public:
     {
         m_items.clear();
         const JArray& items = object["devices"].getArray();
-        for (int i = 0; i < (int)items.size(); i++)
+        for (const auto& v : items)
         {
-            const JObject& o = items[i].getObject();
+            const JObject& o = v.getObject();
             Item it;
             it.fromObject(o);
             add(it);

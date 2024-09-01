@@ -15,7 +15,8 @@ namespace json
 		JsonValue();
 		JsonValue(E_JsonType a_Type);
 		template<class T>
-		JsonValue(T value) :m_ptr(std::make_unique<JPrimitive<T>>(value)) {}
+		JsonValue(T value) :m_ptr(std::make_unique<JPrimitive<T>>(value)) {
+		}
 		JsonValue(const JObject& ref);
 		JsonValue(const JArray& ref);
 		JsonValue(const JsonValue& ref);

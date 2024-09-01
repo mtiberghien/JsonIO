@@ -23,6 +23,10 @@ namespace json
 	public:
 		JPrimitive(const T& value) : m_value(value)
 		{
+			static_assert(std::is_fundamental<T>::value ||
+				std::is_base_of<std::string, T>::value ||
+				std::is_same<const char*, T>::value ||
+				std::is_base_of<nullptr_t, T>::value, "Value should be a c++ primitive or std::string or un const char* or un nullptr_t");
 		}
 		JPrimitive(T&& value) : m_value(std::move(value)) {}
 		~JPrimitive()

@@ -11,7 +11,7 @@ namespace JsonIOtests
 {
 	TEST_CLASS(JsonValuetests)
 	{
-		TEST_METHOD(VoidValue)
+		TEST_METHOD(UndefinedValue)
 		{
 			JsonValue v;
 			Assert::IsTrue(v.getType() == E_JsonType::Undefined);
@@ -51,11 +51,69 @@ namespace JsonIOtests
 			Assert::IsTrue(v == v2);
 		}
 
+		TEST_METHOD(TestShortEquality)
+		{
+			unsigned short s = 1;
+			JsonValue v = (short)1;
+			JsonValue v2 = s;
+			Assert::AreEqual((short)1, (short)v2);
+			Assert::AreEqual((std::string)v, (std::string)v2);
+			Assert::IsTrue(v == v2);
+		}
+
+		TEST_METHOD(TestFloatEquality)
+		{
+			float f = 1;
+			JsonValue v = (float)1;
+			JsonValue v2 = f;
+			Assert::AreEqual((float)1, (float)v2);
+			Assert::AreEqual((std::string)v, (std::string)v2);
+			Assert::IsTrue(v == v2);
+		}
+
+		TEST_METHOD(TestDoubleEquality)
+		{
+			double d = 1;
+			JsonValue v = (double)1;
+			JsonValue v2 = d;
+			Assert::AreEqual((double)1, (double)v2);
+			Assert::AreEqual((std::string)v, (std::string)v2);
+			Assert::IsTrue(v == v2);
+		}
+
+		TEST_METHOD(TestStringEquality)
+		{
+			std::string s{ "Test" };
+			JsonValue v = "Test";
+			JsonValue v2 = s;
+			Assert::AreEqual(std::string{"Test"}, (std::string)v2);
+			Assert::IsTrue(v == v2);
+		}
+
+		TEST_METHOD(TestNullEquality)
+		{
+			JsonValue v = nullptr;
+			JsonValue v2 = nullptr;
+			Assert::AreEqual(JsonValue{nullptr}.getString(), v2.getString());
+			Assert::IsTrue(v == v2);
+		}
+
 		TEST_METHOD(TestJObjectEquality)
 		{
 			JsonValue v = JObject{ { "id", 1 }, { "value","test" } };
 			JsonValue v2 = JObject{ { "id", 1 }, { "value","test" } };
 			Assert::IsTrue(v == JObject{R"({"id": 1, "value": "test"})"});
+			Assert::IsTrue(v == v2);
+		}
+
+		TEST_METHOD(TestJArrayEquality)
+		{
+			JObject o{ { "id", 1 }, {"value","test"} };
+			JsonValue v = JArray{ 1, "deux", nullptr, o };
+			JsonValue v2 = JArray( R"([1, "deux", null, {"id": 1, "value": "test"}])" );
+			JArray a;
+			a << 1 << "deux" << nullptr << JObject{ { "id", 1 }, {"value","test"} };
+			Assert::IsTrue(v == a);
 			Assert::IsTrue(v == v2);
 		}
 

@@ -208,7 +208,6 @@ namespace json
 	{
 		std::string field;
 		std::istringstream ps{ path };
-		JObject* o = this;
 		if (std::getline(ps, field, '.'))
 		{
 			JsonValue& result = getObjectValue(*this, field);

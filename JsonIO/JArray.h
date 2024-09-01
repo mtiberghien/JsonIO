@@ -13,6 +13,7 @@ namespace json
 	public:
 		JArray();
 		JArray(std::initializer_list<JsonValue> items) : m_items(items) {}
+		JArray(const std::string& json) { read(json); }
 		virtual ~JArray() { m_items.clear(); }
 		bool isEmpty() const override{ return m_items.empty(); }
 		E_JsonType getType() const override { return E_JsonType::Array; }
@@ -39,6 +40,8 @@ namespace json
 		void clear() override { m_items.clear(); }
 		std::size_t size() const override { return m_items.size(); }
 		virtual JArray& operator=(const JArray& array);
+		std::vector<JsonValue>::const_iterator begin() const { return m_items.begin(); }
+		std::vector<JsonValue>::const_iterator end() const { return m_items.end(); }
 	private:
 		std::vector<JsonValue> m_items;
 	};

@@ -41,6 +41,8 @@ namespace json
 		bool exists(const std::string& key) const;
 		size_t size() const override { return (int)m_properties.size(); }
 		virtual JObject& operator=(const JObject& object);
+		std::map<std::string, JsonValue>::const_iterator begin() const { return m_properties.begin(); }
+		std::map<std::string, JsonValue>::const_iterator end() const { return m_properties.end(); }
 	private:
 		std::map<std::string, JsonValue> m_properties;
 	};

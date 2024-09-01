@@ -120,6 +120,7 @@ namespace json
 		return read(s);
 	}
 
+
 	JObject& JArray::getObject()
 	{
 		return JObjectProvider::getObjectError();
