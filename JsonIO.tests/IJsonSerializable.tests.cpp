@@ -105,8 +105,8 @@ namespace JsonIOtests
 		{
 			m_items.clear();
 			m_name = object["name"].getString(m_name);
-			m_location.x = object["location"]["x"].getInt();
-			m_location.y = object["location"]["y"].getInt();
+			m_location.x = object.find("location.x").getInt();
+			m_location.y = object.find("location.y").getInt();
 			const JArray& items = object["items"].getArray();
 			for (const auto& v : items)
 			{
