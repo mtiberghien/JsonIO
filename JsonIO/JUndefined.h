@@ -1,10 +1,11 @@
 #pragma once
-#include "IJsonValue.h"
+#include "JsonItem.h"
 #include "JsonIO.h"
+
 
 namespace json
 {
-	class JSONIO_API  JUndefined : public IJsonValue
+	class JUndefined : public JsonItem
 	{
 	public:
 		JUndefined() {}
@@ -34,10 +35,10 @@ namespace json
 		E_JsonType getType() const override { return E_JsonType::Error; }
 	};
 
-	class JSONIO_API JVoidProvider
+	class JVoidProvider
 	{
 	public:
-		static JsonValue& getError();
+		static JSONIO_API JsonValue& getError();
 	private:
 		static JsonValue m_void;
 	};

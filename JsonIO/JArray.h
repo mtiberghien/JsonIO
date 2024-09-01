@@ -54,10 +54,10 @@ namespace json
 		JArray& operator=(const JArray& array) override { return *this; }
 	};
 
-	class JSONIO_API JArrayProvider
+	class JArrayProvider
 	{
 	public:
-		static JArray& getArrayError();
+		static JSONIO_API JArray& getArrayError();
 	private:
 		static JArrayError m_error;
 	};

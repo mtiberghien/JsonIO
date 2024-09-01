@@ -18,7 +18,7 @@ namespace json
 
 
 	template<class T>
-	class JPrimitive : public JsonItem
+	class JPrimitive : public IJsonValue
 	{
 	public:
 		JPrimitive(const T& value) : m_value(value)

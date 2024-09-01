@@ -58,10 +58,10 @@ namespace json
 		JObject& operator=(const JObject& object) override { return *this; }
 	};
 
-	class JSONIO_API JObjectProvider
+	class JObjectProvider
 	{
 	public:
-		static JObject& getObjectError();
+		static JSONIO_API JObject& getObjectError();
 	private:
 		static JObjectError m_error;
 	};
