@@ -198,5 +198,27 @@ namespace JsonIOtests
 			Assert::AreEqual(4, o2["a"].getInt());
 			Assert::AreEqual(5, v2Ref.getInt());
 		}
+
+		TEST_METHOD(DeepCopyHandling)
+		{
+			JObject o{ {"id", 1}, {"o2", JObject{{"id",2}}} };
+			JsonValue v1 = o;
+			JsonValue v2 = o;
+			Assert::AreEqual(1, v1["id"].getInt());
+			Assert::AreEqual(1, v2["id"].getInt());
+			v1["id"] = 2;
+			v2["id"] = 3;
+			Assert::AreEqual(1, o["id"].getInt());
+			Assert::AreEqual(2, v1["id"].getInt());
+			Assert::AreEqual(3, v2["id"].getInt());
+			o.find("o2.id") = 4;
+			v2["o2"]["id"] = 3;
+			Assert::AreEqual(4, o["o2"]["id"].getInt());
+			Assert::AreEqual(2, v1.getObject().find("o2.id").getInt());
+			Assert::AreEqual(3, v2["o2"]["id"].getInt());
+
+			JArray a{ o, v1, v2 };
+
+		}
 	};
 }
