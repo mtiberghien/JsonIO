@@ -198,5 +198,13 @@ namespace JsonIOtests
 			Assert::AreEqual(4, o2["a"].getInt());
 			Assert::AreEqual(5, v2Ref.getInt());
 		}
+
+		TEST_METHOD(findValue)
+		{
+			JsonValue v = JObject{ { "array", JArray{ 1, JObject{ { "id", 2 } } } } };
+			Assert::AreEqual(2, v.find("array[1].id").getInt());
+			v = JArray{ { JArray{ 1, { JObject{ { "id", 2 } } } } } };
+			Assert::AreEqual(2, v.find("[0][1].id").getInt());
+		}
 	};
 }
