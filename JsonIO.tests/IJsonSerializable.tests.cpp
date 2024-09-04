@@ -9,7 +9,7 @@ using namespace json;
 
 namespace JsonIOtests
 {
-	class Item: public IJsonSerializable
+	class Item: public JsonSerializable
 	{
 	public:
 		Item() : m_id{ -1 }, m_name("default") {}
@@ -40,7 +40,7 @@ namespace JsonIOtests
 		std::string m_name;
 	};
 
-	class Items : public std::vector<Item>, public IJsonSerializable
+	class Items : public std::vector<Item>, public JsonSerializable
 	{
 		// Inherited via IJsonSerializable
 		void toObject(JObject& object) override
@@ -73,7 +73,7 @@ namespace JsonIOtests
 		int y;
 	};
 
-	class ItemPackage: public IJsonSerializable
+	class ItemPackage: public JsonSerializable
 	{
 	public:
 		ItemPackage() :m_name(""), m_location({ 0, 0 }), m_items({}) {}

@@ -6,7 +6,7 @@
 using namespace json;
 
 
-class Item : public IJsonSerializable
+class Item : public JsonSerializable
 {
 public:
     Item() {}
@@ -28,7 +28,7 @@ private:
     int m_id{ 0 };
 };
 
-class Items : public IJsonSerializable
+class Items : public JsonSerializable
 {
 public:
     Items()

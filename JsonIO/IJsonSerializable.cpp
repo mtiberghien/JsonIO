@@ -5,14 +5,14 @@
 namespace json
 {
 
-	std::string IJsonSerializable::serialize(bool indent)
+	std::string JsonSerializable::serialize(bool indent)
 	{
 		std::ostringstream s;
 		serialize(s, indent);
 		return s.str();
 	}
 
-	bool IJsonSerializable::serialize(std::ostream& stream, bool indent)
+	bool JsonSerializable::serialize(std::ostream& stream, bool indent)
 	{
 		if (stream.good())
 		{
@@ -23,7 +23,7 @@ namespace json
 		return false;
 	}
 
-	bool IJsonSerializable::deserialize(std::istream& stream)
+	bool JsonSerializable::deserialize(std::istream& stream)
 	{
 		JObject o;
 		bool result = false;
@@ -38,7 +38,7 @@ namespace json
 		return result;
 	}
 
-	bool IJsonSerializable::deserialize(std::string& json)
+	bool JsonSerializable::deserialize(std::string& json)
 	{
 		std::istringstream s{ json };
 		return deserialize(s);
