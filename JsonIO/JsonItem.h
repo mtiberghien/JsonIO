@@ -38,7 +38,7 @@ namespace json
 		bool isBool() const { return getType() == E_JsonType::Bool; }
 		bool isString() const { return getType() == E_JsonType::String; }
 		JSONIO_API JsonValue& find(const std::string& path);
-		JSONIO_API const JsonValue& JsonItem::find(const std::string& path) const;
+		JSONIO_API const JsonValue& find(const std::string& path) const;
 		JSONIO_API bool isNumber() const;
 
 	};
