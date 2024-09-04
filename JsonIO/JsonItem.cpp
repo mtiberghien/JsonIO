@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "JsonItem.h"
 #include "JsonIOHelper.h"
+#include "JUndefined.h"
+#include "JsonValue.h"
 
 namespace json
 {
@@ -38,6 +40,105 @@ namespace json
 			}
 		}
 		return false;
+	}
+
+	bool findFieldPart(std::istream& stream, std::string& fieldPart)
+	{
+		std::ostringstream s;
+		int sizeRead = 0;
+		while (!stream.eof())
+		{
+			char c = stream.get();
+			bool terminationChar = c == '[' || c == ']' || c == '.';
+			if (terminationChar && sizeRead > 0)
+			{
+				break;
+			}
+			if (!terminationChar && !isspace(c) && c!=EOF)
+			{
+				s << c;
+				sizeRead++;
+			}
+		}
+		fieldPart = s.str();
+		return sizeRead > 0;
+	}
+
+	JsonValue& getObjectValue(JObject& o, const std::string& fieldPath)
+	{
+		std::size_t pos = fieldPath.find('[');
+		if (pos != std::string::npos)
+		{
+			std::size_t pos2 = fieldPath.find(']', pos);
+			if (pos2 != std::string::npos)
+			{
+				std::string arrayIndex = fieldPath.substr(pos + 1, pos2 - pos - 1);
+				std::string fieldId = fieldPath.substr(0, pos);
+				if (o.exists(fieldId))
+				{
+					return o[fieldId][arrayIndex];
+				}
+			}
+		}
+		else if (o.exists(fieldPath))
+		{
+			return o[fieldPath];
+		}
+
+		return JVoidProvider::getError();
+	}
+
+	JsonValue& getValueRecursive(JsonValue& result, std::istream& stream)
+	{
+		if (!result.isError())
+		{
+			std::string fieldPart;
+			if (findFieldPart(stream, fieldPart))
+			{
+				return getValueRecursive(result[fieldPart], stream);
+			}
+		}
+
+		return result;
+	}
+
+	const JsonValue& getValueRecursive(const JsonValue& result, std::istream& stream)
+	{
+		if (!result.isError())
+		{
+			std::string fieldPart;
+			if (findFieldPart(stream, fieldPart))
+			{
+				return getValueRecursive(result[fieldPart], stream);
+			}
+		}
+
+		return result;
+	}
+
+
+	JsonValue& JsonItem::find(const std::string& path)
+	{
+		std::string fieldPart;
+		std::istringstream ps{ path };
+		if (findFieldPart(ps, fieldPart))
+		{
+			return getValueRecursive(this->operator[](fieldPart), ps);
+		}
+
+		return JVoidProvider::getError();
+	}
+
+	const JsonValue& JsonItem::find(const std::string& path) const
+	{
+		std::string fieldPart;
+		std::istringstream ps{ path };
+		if (findFieldPart(ps, fieldPart))
+		{
+			return getValueRecursive(this->operator[](fieldPart), ps);
+		}
+
+		return JVoidProvider::getError();
 	}
 }
 

@@ -162,114 +162,59 @@ namespace json
 		return read(s);
 	}
 
-	JsonValue& getObjectValue(JObject& o, const std::string& fieldPath)
-	{
-		std::size_t pos = fieldPath.find('[');
-		if (pos != std::string::npos)
-		{
-			std::size_t pos2 = fieldPath.find(']', pos);
-			if (pos2 != std::string::npos)
-			{
-				std::string arrayIndex = fieldPath.substr(pos + 1, pos2 - pos - 1);
-				std::string fieldId = fieldPath.substr(0, pos);
-				if (o.exists(fieldId))
-				{
-					return o[fieldId][arrayIndex];
-				}
-			}
-		}
-		else if (o.exists(fieldPath))
-		{
-			return o[fieldPath];
-		}
-
-		return JVoidProvider::getError();
-	}
-
-	const JsonValue& getObjectValue(const JObject& o, const std::string& fieldPath)
-	{
-		std::size_t pos = fieldPath.find('[');
-		if (pos != std::string::npos)
-		{
-			std::size_t pos2 = fieldPath.find(']', pos);
-			if (pos2 != std::string::npos)
-			{
-				std::string arrayIndex = fieldPath.substr(pos + 1, pos2 - pos - 1);
-				std::string fieldId = fieldPath.substr(0, pos);
-				if (o.exists(fieldId))
-				{
-					return o[fieldId][arrayIndex];
-				}
-			}
-		}
-		else if (o.exists(fieldPath))
-		{
-			return o[fieldPath];
-		}
-
-		return JVoidProvider::getError();
-	}
-
-	JsonValue& getValueRecursive(JsonValue& result, std::istream& stream)
-	{
-		std::string field;
-		if (std::getline(stream, field, '.'))
-		{
-			if (result.getType() == E_JsonType::Object)
-			{
-				return getValueRecursive(getObjectValue(result.getObject(), field), stream);
-			}
-			else
-			{
-				return JVoidProvider::getError();
-			}
-		}
-
-		return result;
-	}
-
-	const JsonValue& getValueRecursive(const JsonValue& result, std::istream& stream)
-	{
-		std::string field;
-		if (std::getline(stream, field, '.'))
-		{
-			if (result.getType() == E_JsonType::Object)
-			{
-				return getValueRecursive(getObjectValue(result.getObject(), field), stream);
-			}
-			else
-			{
-				return JVoidProvider::getError();
-			}
-		}
-
-		return result;
-	}
-
-
-	JsonValue& JObject::find(const std::string& path)
-	{
-		std::string field;
-		std::istringstream ps{ path };
-		if (std::getline(ps, field, '.'))
-		{
-			return getValueRecursive(getObjectValue(*this, field), ps);
-		}
-		
-		return JVoidProvider::getError();
-	}
-
-	const JsonValue& JObject::find(const std::string& path) const
-	{
-		std::string field;
-		std::istringstream ps{ path };
-		if (std::getline(ps, field, '.'))
-		{
-			return getValueRecursive(getObjectValue(*this, field), ps);
-		}
-
-		return JVoidProvider::getError();
-	}
+// 	const JsonValue& getObjectValue(const JObject& o, const std::string& fieldPath)
+// 	{
+// 		std::size_t pos = fieldPath.find('[');
+// 		if (pos != std::string::npos)
+// 		{
+// 			std::size_t pos2 = fieldPath.find(']', pos);
+// 			if (pos2 != std::string::npos)
+// 			{
+// 				std::string arrayIndex = fieldPath.substr(pos + 1, pos2 - pos - 1);
+// 				std::string fieldId = fieldPath.substr(0, pos);
+// 				if (o.exists(fieldId))
+// 				{
+// 					return o[fieldId][arrayIndex];
+// 				}
+// 			}
+// 		}
+// 		else if (o.exists(fieldPath))
+// 		{
+// 			return o[fieldPath];
+// 		}
+// 
+// 		return JVoidProvider::getError();
+// 	}
+// 
+// 	const JsonValue& getValueRecursive(const JsonValue& result, std::istream& stream)
+// 	{
+// 		std::string field;
+// 		if (std::getline(stream, field, '.'))
+// 		{
+// 			if (result.getType() == E_JsonType::Object)
+// 			{
+// 				return getValueRecursive(getObjectValue(result.getObject(), field), stream);
+// 			}
+// 			else
+// 			{
+// 				return JVoidProvider::getError();
+// 			}
+// 		}
+// 
+// 		return result;
+// 	}
+// 
+// 	const JsonValue& JObject::find(const std::string& path) const
+// 	{
+// 		std::string field;
+// 		std::istringstream ps{ path };
+// 		if (std::getline(ps, field, '.'))
+// 		{
+// 			return getValueRecursive(getObjectValue(*this, field), ps);
+// 		}
+// 
+// 		return JVoidProvider::getError();
+// 	}
 
 	bool JObject::exists(const std::string& key) const
 	{

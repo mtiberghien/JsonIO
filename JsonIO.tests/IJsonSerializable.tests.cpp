@@ -76,7 +76,7 @@ namespace JsonIOtests
 	class ItemPackage: public IJsonSerializable
 	{
 	public:
-		ItemPackage() {}
+		ItemPackage() :m_name(""), m_location({ 0, 0 }), m_items({}) {}
 		ItemPackage(std::string name, const Point& location, const Items& items) :
 			m_name(name),
 			m_location(location),
@@ -116,9 +116,9 @@ namespace JsonIOtests
 			}
 		}
 	private:
-		std::string m_name{ "" };
-		Point m_location{ 0,0 };
-		Items m_items{};
+		std::string m_name;
+		Point m_location;
+		Items m_items;
 	};
 
 	TEST_CLASS(IJsonSerializabletests)

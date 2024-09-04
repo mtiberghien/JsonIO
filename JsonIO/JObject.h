@@ -37,8 +37,6 @@ namespace json
 		void write(std::ostream& stream, bool indent = false) { int indentLevel = 0; write(stream, indent, indentLevel); }
 		virtual bool read(std::istream& stream);
 		virtual bool read(const std::string& json);
-		JsonValue& find(const std::string& path);
-		const JsonValue& find(const std::string& path) const;
 		bool exists(const std::string& key) const;
 		size_t size() const override { return (int)m_properties.size(); }
 		virtual JObject& operator=(const JObject& object);

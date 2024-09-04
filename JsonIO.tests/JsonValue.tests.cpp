@@ -220,5 +220,13 @@ namespace JsonIOtests
 			JArray a{ o, v1, v2 };
 
 		}
+
+		TEST_METHOD(findValue)
+		{
+			JsonValue v = JObject{ { "array", JArray{ 1, JObject{ { "id", 2 } } } } };
+			Assert::AreEqual(2, v.find("array[1].id").getInt());
+			v = JArray{ { JArray{ 1, { JObject{ { "id", 2 } } } } } };
+			Assert::AreEqual(2, v.find("[0][1].id").getInt());
+		}
 	};
 }
